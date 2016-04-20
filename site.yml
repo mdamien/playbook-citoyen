@@ -1,0 +1,9 @@
+---
+
+- name: Rôles affectés à cocolulu
+  hosts: cocolulu
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - pad

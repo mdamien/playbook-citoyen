@@ -1,0 +1,62 @@
+<VirtualHost *:80>
+  ServerName {{ etherpad_domain }}
+  ServerSignature Off
+
+  Redirect / https://{{ etherpad_domain }}/
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ etherpad_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  CustomLog ${APACHE_LOG_DIR}/etherpad_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/etherpad_error.log
+
+  LoadModule  proxy_module         /usr/lib/apache2/modules/mod_proxy.so
+  LoadModule  proxy_http_module    /usr/lib/apache2/modules/mod_proxy_http.so
+  LoadModule  headers_module       /usr/lib/apache2/modules/mod_headers.so
+  LoadModule  deflate_module       /usr/lib/apache2/modules/mod_deflate.so
+
+  ProxyVia On
+  ProxyRequests Off
+  ProxyPass / http://127.0.0.1:{{ etherpad_port }}/
+  ProxyPassReverse / http://127.0.0.1:{{ etherpad_port }}/
+  ProxyPreserveHost On
+
+  SSLCertificateFile      /etc/ssl/private/temp-padnew.crt
+  SSLCertificateKeyFile   /etc/ssl/private/temp-server.key
+  SSLEngine On
+
+  RewriteEngine On
+  RewriteRule /p/*$ https://{{ etherpad_domain }}/ [NC,L]
+  RewriteCond %{REQUEST_URI} !^/locales/
+  RewriteCond %{REQUEST_URI} !^/locales.json
+  RewriteCond %{REQUEST_URI} !^/admin
+  RewriteCond %{REQUEST_URI} !^/p/
+  RewriteCond %{REQUEST_URI} !^/static/
+  RewriteCond %{REQUEST_URI} !^/pluginfw/
+  RewriteCond %{REQUEST_URI} !^/javascripts/
+  RewriteCond %{REQUEST_URI} !^/socket.io/
+  RewriteCond %{REQUEST_URI} !^/ep/
+  RewriteCond %{REQUEST_URI} !^/minified/
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteCond %{REQUEST_URI} !^/ro/
+  RewriteCond %{REQUEST_URI} !^/error/
+  RewriteCond %{REQUEST_URI} !^/jserror
+  RewriteCond %{REQUEST_URI} !/favicon.ico
+  RewriteCond %{REQUEST_URI} !/robots.txt
+  RewriteRule ^/+(.+)$ https://{{ etherpad_domain }}/p/$1 [L]
+
+  <Proxy *>
+    Options FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+  </Proxy>
+</VirtualHost>

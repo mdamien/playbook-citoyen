@@ -1,0 +1,76 @@
+---
+
+- name: Creation BDD temporaire
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: eptemp
+    state: present
+
+- name: Creation user BDD temporaire
+  mysql_user:
+    config_file: /etc/mysql/debian.cnf
+    name: 'eptemp'
+    password: 'eptemp'
+    priv: 'eptemp.*:ALL'
+    state: present
+
+- name: Copie du dump
+  copy:
+    src: '{{ etherpad_import }}'
+    dest: '{{ etherpad_home }}/import.sql.xz'
+
+- name: Décompression du dump
+  shell: 'unxz --force {{ etherpad_home }}/import.sql.xz'
+
+- name: Import du dump
+  shell: 'mysql --user=eptemp --password=eptemp eptemp < {{ etherpad_home }}/import.sql'
+
+- name: Installation UeberDB
+  npm:
+    name: ueberDB
+    state: present
+    path: '{{ etherpad_home }}/etherpad-lite/src'
+
+- name: Copie fichier de config pour conversion
+  copy:
+    src: srv_etherpad_etherpad-lite_bin_convertSettings.json
+    dest: '{{ etherpad_home }}/etherpad-lite/bin/convertSettings.json'
+
+- name: Exécution conversion
+  command: 'node convert.js convertSettings.json {{ etherpad_home }}/import-converted.sql'
+  args:
+    chdir: '{{ etherpad_home }}/etherpad-lite/bin/'
+
+- name: Suppression BDD temporaire
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: eptemp
+    state: absent
+
+- name: Suppression user BDD temporaire
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: 'eptemp'
+    state: absent
+
+- name: Arrêt etherpad
+  service:
+    name: etherpad
+    state: stopped
+
+- name: Suppression table store
+  shell: 'echo "drop table store;" | mysql --user={{ etherpad_db_user }} --password={{ etherpad_db_pass }} {{ etherpad_db_name }}'
+
+- name: Import du dump converti
+  shell: 'mysql --user={{ etherpad_db_user }} --password={{ etherpad_db_pass }} {{ etherpad_db_name }} < {{ etherpad_home }}/import-converted.sql'
+
+- name: Conversion table store en MyISAM
+  shell: 'echo "alter table store engine = myisam;" | mysql --user={{ etherpad_db_user }} --password={{ etherpad_db_pass }} {{ etherpad_db_name }}'
+
+- name: Suppression dump et dump converti
+  file:
+    path: '{{ etherpad_home }}/{{ item }}.sql'
+    state: absent
+  with_items:
+    - import
+    - import-converted

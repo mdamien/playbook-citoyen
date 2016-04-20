@@ -1,0 +1,11 @@
+---
+
+- name: Installation mariadb
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - mariadb-server
+    - mariadb-client
+    - python-mysqldb
+  notify: restart mysql

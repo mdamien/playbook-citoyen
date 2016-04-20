@@ -1,0 +1,91 @@
+---
+
+- name: Installation nodejs
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - nodejs
+    - nodejs-legacy
+    - npm
+
+- name: Creation user 'etherpad'
+  user:
+    name: etherpad
+    state: present
+    group: rcapps
+    home: '{{ etherpad_home }}'
+
+- name: Suppression password 'etherpad'
+  command: passwd -d etherpad
+
+- name: Clonage repo etherpad-lite
+  git:
+    repo: git://github.com/ether/etherpad-lite.git
+    dest: '{{ etherpad_home }}/etherpad-lite'
+    update: no
+    accept_hostkey: True
+
+- name: Création fichier de configuration
+  template:
+    src: srv_etherpad_etherpad-lite_settings.json.j2
+    dest: '{{ etherpad_home }}/etherpad-lite/settings.json'
+
+- name: Création fichier CSS personnalisé
+  copy:
+    src: srv_etherpad_etherpad-lite_src_static_custom_pad.css
+    dest: '{{ etherpad_home }}/etherpad-lite/src/static/custom/pad.css'
+
+- name: Création BDD
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ etherpad_db_name }}'
+    state: present
+
+- name: Création user BDD
+  mysql_user:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ etherpad_db_user }}'
+    password: '{{ etherpad_db_pass }}'
+    priv: '{{ etherpad_db_name }}.*:ALL'
+    state: present
+
+- name: Application des permissions
+  file:
+    owner: etherpad
+    group: rcapps
+    recurse: yes
+    path: '{{ etherpad_home }}'
+
+- name: Création fichier service
+  template:
+    src: etc_systemd_system_etherpad.service.j2
+    dest: /etc/systemd/system/etherpad.service
+  register: servicefile
+
+- name: Enregistrement service
+  when: servicefile.changed
+  command: systemctl enable etherpad
+
+- name: Rechargement service
+  command: systemctl daemon-reload
+
+- name: Import depuis ancien etherpad
+  include: import.yml
+  when: etherpad_import is defined
+
+- name: (re)démarrage etherpad
+  service:
+    name: etherpad
+    state: restarted
+
+- name: Attente de la fin de l'installation initiale d'etherpad
+  wait_for:
+    port: '{{ etherpad_port }}'
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-enabled_001-etherpad.conf.j2
+    dest: /etc/apache2/sites-enabled/001-etherpad.conf
+  notify:
+    - restart apache

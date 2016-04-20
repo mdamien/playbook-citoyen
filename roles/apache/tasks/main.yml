@@ -1,0 +1,27 @@
+---
+
+- name: Installation apache
+  apt:
+    pkg: apache2
+    state: installed
+
+- name: Activation modules utiles
+  apache2_module:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - rewrite
+    - proxy
+    - ssl
+
+- name: Suppression index par défaut
+  file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: Désactivation vhost par défaut
+  template:
+    src: etc_apache2_sites-enabled_000-default.conf.j2
+    dest: /etc/apache2/sites-enabled/000-default.conf
+  notify:
+    - restart apache

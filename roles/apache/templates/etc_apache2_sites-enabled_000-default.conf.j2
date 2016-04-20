@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+  ServerName default
+  DocumentRoot /var/www/html
+
+  Redirect / {{ apache_default_redirect }}
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName default
+  DocumentRoot /var/www/html
+
+  Redirect / {{ apache_default_redirect }}
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

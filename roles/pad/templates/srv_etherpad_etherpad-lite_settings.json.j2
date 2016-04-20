@@ -1,0 +1,52 @@
+{
+  "title": "{{ etherpad_title }}",
+  "favicon": "favicon.ico",
+  "ip": "127.0.0.1",
+  "port" : {{ etherpad_port }},
+  "dbType" : "mysql",
+   "dbSettings" : {
+    "user"    : "{{ etherpad_db_user }}",
+    "host"    : "localhost",
+    "password": "{{ etherpad_db_pass }}",
+    "database": "{{ etherpad_db_name }}",
+    "charset" : "utf8mb4"
+  },
+  "defaultPadText" : "",
+  "padOptions": {
+    "noColors": false,
+    "showControls": true,
+    "showChat": true,
+    "showLineNumbers": true,
+    "useMonospaceFont": false,
+    "userName": true,
+    "userColor": false,
+    "rtl": false,
+    "alwaysShowChat": true,
+    "chatAndUsers": true,
+    "lang": "fr-fr"
+  },
+  "suppressErrorsInPadText" : false,
+  "requireSession" : false,
+  "editOnly" : false,
+  "sessionNoPassword" : false,
+  "minify" : true,
+  "maxAge" : 21600,
+  "abiword" : null,
+  "soffice" : null,
+  "tidyHtml" : null,
+  "allowUnknownFileEnds" : true,
+  "requireAuthentication" : false,
+  "requireAuthorization" : false,
+  "trustProxy" : true,
+  "disableIPlogging" : false,
+  "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"],
+  "loadTest": false,
+  "loglevel": "INFO",
+  "logconfig" : {
+    "appenders": [
+      {
+        "type": "console"
+      }
+    ]
+  }
+}

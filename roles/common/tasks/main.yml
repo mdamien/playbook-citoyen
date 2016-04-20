@@ -1,0 +1,16 @@
+---
+- name: Installation paquets utiles
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - git
+    - htop
+    - gzip
+    - curl
+    - python
+
+- name: Creation groupe rcapps
+  group:
+    name: rcapps
+    state: present

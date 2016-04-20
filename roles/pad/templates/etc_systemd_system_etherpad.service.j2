@@ -1,0 +1,12 @@
+[Unit]
+Description=etherpad
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=etherpad
+Group=rcapps
+ExecStart={{ etherpad_home }}/etherpad-lite/bin/run.sh
+
+[Install]
+WantedBy=multi-user.target
