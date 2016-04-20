@@ -48,7 +48,7 @@
     state: absent
 
 - name: Suppression user BDD temporaire
-  mysql_db:
+  mysql_user:
     config_file: /etc/mysql/debian.cnf
     name: 'eptemp'
     state: absent
