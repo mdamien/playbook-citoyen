@@ -1,10 +1,16 @@
 ---
 
+etherpad_title: Pad Regards Citoyens
+
 etherpad_home: /srv/etherpad
 etherpad_port: 9001
-etherpad_title: Pad Regards Citoyens
 etherpad_domain: pad.regardscitoyens.org
+
+# etherpad_ssl_cert: /remote/path/to/cert
+# etherpad_ssl_key: /remote/path/to/key
+
 etherpad_db_name: etherpad
 etherpad_db_user: etherpad
 etherpad_db_pass: etherpad
+
 # etherpad_import: /path/to/dump.sql

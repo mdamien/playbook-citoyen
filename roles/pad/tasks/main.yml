@@ -16,8 +16,13 @@
     group: rcapps
     home: '{{ etherpad_home }}'
 
+- name: Vérification mot de passe 'etherpad'
+  shell: 'cat /etc/shadow | egrep ^etherpad: | cut -d ":" -f 2 | wc -c'
+  register: etherpad_crypted_password
+
 - name: Suppression password 'etherpad'
-  command: passwd -d etherpad
+  command: 'passwd -d etherpad'
+  when: etherpad_crypted_password != '1'
 
 - name: Clonage repo etherpad-lite
   git:
@@ -83,9 +88,18 @@
   wait_for:
     port: '{{ etherpad_port }}'
 
-- name: Création config vhost apache
+- name: Création config vhost apache SSL
   template:
-    src: etc_apache2_sites-enabled_001-etherpad.conf.j2
+    src: etc_apache2_sites-enabled_001-etherpad-ssl.conf.j2
     dest: /etc/apache2/sites-enabled/001-etherpad.conf
   notify:
     - restart apache
+  when: etherpad_ssl_cert is defined
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-enabled_001-etherpad-nossl.conf.j2
+    dest: /etc/apache2/sites-enabled/001-etherpad.conf
+  notify:
+    - restart apache
+  when: etherpad_ssl_cert is not defined

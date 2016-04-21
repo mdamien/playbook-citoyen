@@ -29,8 +29,8 @@
   ProxyPassReverse / http://127.0.0.1:{{ etherpad_port }}/
   ProxyPreserveHost On
 
-  SSLCertificateFile      /etc/ssl/private/temp-padnew.crt
-  SSLCertificateKeyFile   /etc/ssl/private/temp-server.key
+  SSLCertificateFile      {{ etherpad_ssl_cert }}
+  SSLCertificateKeyFile   {{ etherpad_ssl_key }}
   SSLEngine On
 
   RewriteEngine On
