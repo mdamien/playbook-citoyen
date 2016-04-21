@@ -1,4 +1,4 @@
-<VirtualHost *:80>
+<VirtualHost {{ etherpad_domain }}:80>
   ServerName {{ etherpad_domain }}
   ServerSignature Off
 
@@ -10,7 +10,7 @@
   </Location>
 </VirtualHost>
 
-<VirtualHost *:443>
+<VirtualHost {{ etherpad_domain }}:443>
   ServerName {{ etherpad_domain }}
   ServerAdmin {{ contact_email }}
   ServerSignature Off
