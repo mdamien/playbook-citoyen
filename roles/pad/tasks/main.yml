@@ -19,10 +19,11 @@
 - name: Vérification mot de passe 'etherpad'
   shell: 'cat /etc/shadow | egrep ^etherpad: | cut -d ":" -f 2 | wc -c'
   register: etherpad_crypted_password
+  changed_when: false
 
 - name: Suppression password 'etherpad'
   command: 'passwd -d etherpad'
-  when: etherpad_crypted_password != '1'
+  when: etherpad_crypted_password.stdout != '1'
 
 - name: Clonage repo etherpad-lite
   git:
@@ -84,7 +85,7 @@
     name: etherpad
     state: restarted
 
-- name: Attente de la fin de l'installation initiale d'etherpad
+- name: Attente du fonctionnement d'etherpad
   wait_for:
     port: '{{ etherpad_port }}'
 
