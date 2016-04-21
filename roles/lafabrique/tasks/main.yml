@@ -1,0 +1,66 @@
+---
+
+- name: Creation user 'lafabrique'
+  user:
+    name: lafabrique
+    state: present
+    group: rcapps
+    home: '{{ lafabrique_home }}'
+
+- name: Vérification mot de passe 'lafabrique'
+  shell: 'cat /etc/shadow | egrep ^lafabrique: | cut -d ":" -f 2 | wc -c'
+  register: lafabrique_crypted_password
+  changed_when: false
+
+- name: Suppression password 'lafabrique'
+  command: 'passwd -d lafabrique'
+  when: lafabrique_crypted_password.stdout != '1'
+
+- name: Clonage repository API
+  git:
+    repo: '{{ lafabrique_api_repo }}'
+    dest: '{{ lafabrique_home }}/the-law-factory-parser'
+    version: '{{ lafabrique_api_branch }}'
+    update: yes
+    accept_hostkey: True
+
+- name: Clonage repository Web
+  git:
+    repo: '{{ lafabrique_www_repo }}'
+    dest: '{{ lafabrique_home }}/the-law-factory'
+    version: '{{ lafabrique_www_branch }}'
+    update: no
+    accept_hostkey: True
+
+- name: Création fichier de config Web
+  template:
+    src: srv_lafabrique_the-law-factory_public_config.js.j2
+    dest: '{{ lafabrique_home }}/the-law-factory/public/config.js'
+
+- name: Construction web
+  command: make install
+  args:
+    chdir: '{{ lafabrique_home }}/the-law-factory'
+
+- name: Application des permissions
+  file:
+    owner: lafabrique
+    group: rcapps
+    recurse: yes
+    path: '{{ lafabrique_home }}'
+
+- name: Création config vhost apache SSL
+  template:
+    src: etc_apache2_sites-enabled_003-lafabrique-ssl.conf.j2
+    dest: /etc/apache2/sites-enabled/003-lafabrique.conf
+  notify:
+    - restart apache
+  when: lafabrique_ssl_cert is defined
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-enabled_003-lafabrique-nossl.conf.j2
+    dest: /etc/apache2/sites-enabled/003-lafabrique.conf
+  notify:
+    - restart apache
+  when: lafabrique_ssl_cert is not defined

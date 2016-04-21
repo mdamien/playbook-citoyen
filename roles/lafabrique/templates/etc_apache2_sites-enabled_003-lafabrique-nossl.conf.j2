@@ -1,0 +1,24 @@
+<VirtualHost {{ lafabrique_domain }}:80>
+  ServerName {{ lafabrique_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  DocumentRoot {{ lafabrique_home }}/the-law-factory/prod/
+  <Directory "{{ lafabrique_home }}/the-law-factory/prod/">
+    Options FollowSymLinks
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  Alias "/api/" {{ lafabrique_home }}/the-law-factory-parser/data/
+  <Directory "{{ lafabrique_home }}/the-law-factory-parser/data/">
+    Options FollowSymLinks
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>

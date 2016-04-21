@@ -28,6 +28,25 @@ Ansible doit répondre avec un "ping: pong" pour chaque cible.
 
 Ces rôles permettent l'installation des applications créées par Regards Citoyens.
 
+### lafabrique
+
+*Dépend de : common, apache*
+
+Ce rôle installe la fabrique de la loi.
+
+*Variables :*
+
+---
+
+* `lafabrique_home` (`/srv/lafabrique`) : homedir pour l'user lafabrique
+* `lafabrique_domain` (`www.lafabriquedelaloi.fr`) : domaine
+* `lafabrique_api_repo` (`git://github.com/regardscitoyens/the-law-factory-parser.git`) : repo git pour l'api
+* `lafabrique_api_branch` (`master`) : branche git pour l'api
+* `lafabrique_www_repo` (`git://github.com/regardscitoyens/the-law-factory.git`) : repo git pour le frontend
+* `lafabrique_www_branch` (`css-refactor`) : branche git pour le frontend
+* `lafabrique_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas utilisé sur le vhost
+* `lafabrique_ssl_key` (non défini): chemin *distant* vers la clé privée serveur pour le certificat SSL
+
 ## Rôles utilitaires
 
 Ces rôles permettent l'installation de services tiers utilisés par Regards Citoyens ou par les applications.

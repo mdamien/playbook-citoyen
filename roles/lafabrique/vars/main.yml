@@ -1,0 +1,13 @@
+---
+
+lafabrique_home: /srv/lafabrique
+lafabrique_domain: cocofab.lafabriquedelaloi.fr
+
+lafabrique_api_repo: git://github.com/regardscitoyens/the-law-factory-parser.git
+lafabrique_api_branch: master
+
+lafabrique_www_repo: git://github.com/regardscitoyens/the-law-factory.git
+lafabrique_www_branch: css-refactor
+
+# lafabrique_ssl_cert: /remote/path/to/cert
+# lafabrique_ssl_key: /remote/path/to/key

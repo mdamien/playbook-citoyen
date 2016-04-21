@@ -1,0 +1,33 @@
+<VirtualHost {{ lafabrique_domain }}:80>
+  ServerName {{ lafabrique_domain }}
+  ServerSignature Off
+
+  Redirect / https://{{ lafabrique_domain }}/
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>
+
+<VirtualHost {{ lafabrique_domain }}:443>
+  ServerName {{ lafabrique_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  SSLCertificateFile      {{ lafabrique_ssl_cert }}
+  SSLCertificateKeyFile   {{ lafabrique_ssl_key }}
+  SSLEngine On
+
+  DocumentRoot {{ lafabrique_home }}/the-law-factory/prod/
+  <Directory "{{ lafabrique_home }}/the-law-factory/prod/">
+    Options FollowSymLinks
+    Require all granted
+  </Directory>
+
+  Alias "/api/" {{ lafabrique_home }}/the-law-factory-parser/data/
+  <Directory "{{ lafabrique_home }}/the-law-factory-parser/data/">
+    Options FollowSymLinks
+    Require all granted
+  </Directory>
+</VirtualHost>
