@@ -73,6 +73,15 @@
 - name: Rechargement service
   command: systemctl daemon-reload
 
+- name: (re)démarrage gogs
+  service:
+    name: gogs
+    state: restarted
+
+- name: Attente du fonctionnement de gogs
+  wait_for:
+    port: '{{ gogs_port }}'
+
 - name: Création config vhost apache SSL
   template:
     src: etc_apache2_sites-enabled_002-gogs-ssl.conf.j2
