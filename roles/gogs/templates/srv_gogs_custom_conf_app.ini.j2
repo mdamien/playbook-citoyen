@@ -1,0 +1,18 @@
+APP_NAME = {{ gogs_title }}
+RUN_USER = gogs
+RUN_MODE = prod
+
+[repository]
+ROOT = {{ gogs_home }}/repos
+
+[server]
+HTTP_ADDR = 127.0.0.1
+HTTP_PORT = {{ gogs_port }}
+ROOT_URL = http://{{ gogs_domain }}/
+
+[database]
+DB_TYPE = mysql
+HOST = 127.0.0.1:3306
+NAME = {{ gogs_db_name }}
+USER = {{ gogs_db_user }}
+PASSWD = `{{ gogs_db_pass }}`

@@ -1,0 +1,42 @@
+<VirtualHost {{ gogs_domain }}:80>
+  ServerName {{ gogs_domain }}
+  ServerSignature Off
+
+  Redirect / https://{{ gogs_domain }}/
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>
+
+<VirtualHost {{ gogs_domain }}:443>
+  ServerName {{ gogs_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  CustomLog ${APACHE_LOG_DIR}/gogs_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/gogs_error.log
+
+  LoadModule  proxy_module         /usr/lib/apache2/modules/mod_proxy.so
+  LoadModule  proxy_http_module    /usr/lib/apache2/modules/mod_proxy_http.so
+  LoadModule  headers_module       /usr/lib/apache2/modules/mod_headers.so
+  LoadModule  deflate_module       /usr/lib/apache2/modules/mod_deflate.so
+
+  ProxyVia On
+  ProxyRequests Off
+  ProxyPass / http://127.0.0.1:{{ gogs_port }}/
+  ProxyPassReverse / http://127.0.0.1:{{ gogs_port }}/
+  ProxyPreserveHost On
+
+  SSLCertificateFile      {{ gogs_ssl_cert }}
+  SSLCertificateKeyFile   {{ gogs_ssl_key }}
+  SSLEngine On
+
+  <Proxy *>
+    Options FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+  </Proxy>
+</VirtualHost>

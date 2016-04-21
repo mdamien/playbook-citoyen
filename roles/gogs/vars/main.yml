@@ -1,0 +1,14 @@
+---
+
+gogs_title: Git Regards Citoyens
+
+gogs_home: /srv/gogs
+gogs_port: 3000
+gogs_domain: git.regardscitoyens.org
+
+# gogs_ssl_cert: /remote/path/to/cert
+# gogs_ssl_key: /remote/path/to/key
+
+gogs_db_name: gogs
+gogs_db_user: gogs
+gogs_db_pass: gogs

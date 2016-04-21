@@ -1,0 +1,23 @@
+<VirtualHost {{ gogs_domain }}:80>
+  ServerName {{ gogs_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  ProxyVia On
+  ProxyRequests Off
+  ProxyPass / http://127.0.0.1:{{ gogs_port }}/
+  ProxyPassReverse / http://127.0.0.1:{{ gogs_port }}/
+  ProxyPreserveHost On
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+
+  <Proxy *>
+    Options FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+  </Proxy>
+</VirtualHost>

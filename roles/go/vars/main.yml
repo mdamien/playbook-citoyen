@@ -1,0 +1,6 @@
+---
+
+go_tgz: "go1.6.linux-amd64.tar.gz"
+go_url: "https://storage.googleapis.com/golang/{{ go_tgz }}"
+go_home: "/root"
+go_version_target: "go version go1.6 linux/amd64"

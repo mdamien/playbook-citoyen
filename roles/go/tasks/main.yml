@@ -1,0 +1,30 @@
+---
+# Largement inspiré de https://github.com/jlund/ansible-go (MIT)
+
+- name: Téléchargement go
+  get_url:
+    url: '{{ go_url }}'
+    dest: '{{ go_home }}/{{ go_tgz }}'
+
+- name: Vérification version go actuelle
+  command: /usr/local/go/bin/go version
+  ignore_errors: yes
+  register: go_version
+  changed_when: false
+
+- name: Extraction go téléchargé
+  unarchive:
+    src: '{{ go_home }}/{{ go_tgz }}'
+    dest: /usr/local
+    copy: no
+  when: go_version|failed or go_version.stdout != go_version_target
+
+- name: Ajout go au PATH pour tous les users
+  copy:
+    src: etc_profile.d_go-bin.sh
+    dest: /etc/profile.d/go-bin.sh
+
+- name: Ajout GOPATH pour tous les users
+  copy:
+    src: etc_profile.d_go-path.sh
+    dest: /etc/profile.d/go-path.sh

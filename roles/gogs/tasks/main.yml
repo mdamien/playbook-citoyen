@@ -1,0 +1,90 @@
+---
+
+- name: Creation user 'gogs'
+  user:
+    name: gogs
+    state: present
+    group: rcapps
+    home: '{{ gogs_home }}'
+
+- name: Vérification mot de passe 'gogs'
+  shell: 'cat /etc/shadow | egrep ^gogs: | cut -d ":" -f 2 | wc -c'
+  register: gogs_crypted_password
+  changed_when: false
+
+- name: Suppression password 'gogs'
+  command: 'passwd -d gogs'
+  when: gogs_crypted_password.stdout != '1'
+
+- name: Création BDD
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ gogs_db_name }}'
+    state: present
+
+- name: Création user BDD
+  mysql_user:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ gogs_db_user }}'
+    password: '{{ gogs_db_pass }}'
+    priv: '{{ gogs_db_name }}.*:ALL'
+    state: present
+
+- name: Installation gogs
+  shell: GOPATH={{ gogs_home}}/go /usr/local/go/bin/go get -u github.com/gogits/gogs
+  args:
+    creates: '{{ gogs_home }}/go/src/github.com/gogits/gogs/.git'
+  become_user: gogs
+
+- name: Construction gogs
+  shell: GOPATH={{ gogs_home}}/go /usr/local/go/bin/go build
+  args:
+    creates: '{{ gogs_home }}/go/src/github.com/gogits/gogs/gogs'
+    chdir: '{{ gogs_home }}/go/src/github.com/gogits/gogs'
+  become_user: gogs
+
+- name: Création répertoire pour configuration
+  file:
+    path: '{{ gogs_home }}/go/src/github.com/gogits/gogs/custom/conf'
+    state: directory
+    owner: gogs
+    group: rcapps
+    mode: 0775
+
+- name: Création fichier de configuration
+  template:
+    src: srv_gogs_custom_conf_app.ini.j2
+    dest: '{{ gogs_home }}/go/src/github.com/gogits/gogs/custom/conf/app.ini'
+    owner: gogs
+    group: rcapps
+    mode: 0660
+    force: no
+
+- name: Création fichier service
+  template:
+    src: etc_systemd_system_gogs.service.j2
+    dest: /etc/systemd/system/gogs.service
+  register: servicefile
+
+- name: Enregistrement service
+  when: servicefile.changed
+  command: systemctl enable gogs
+
+- name: Rechargement service
+  command: systemctl daemon-reload
+
+- name: Création config vhost apache SSL
+  template:
+    src: etc_apache2_sites-enabled_002-gogs-ssl.conf.j2
+    dest: /etc/apache2/sites-enabled/002-gogs.conf
+  notify:
+    - restart apache
+  when: gogs_ssl_cert is defined
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-enabled_002-gogs-nossl.conf.j2
+    dest: /etc/apache2/sites-enabled/002-gogs.conf
+  notify:
+    - restart apache
+  when: gogs_ssl_cert is not defined
