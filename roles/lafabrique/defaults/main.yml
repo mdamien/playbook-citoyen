@@ -1,7 +1,7 @@
 ---
 
 lafabrique_home: /srv/lafabrique
-lafabrique_domain: cocofab.lafabriquedelaloi.fr
+lafabrique_domain: www.lafabriquedelaloi.fr
 
 lafabrique_api_repo: git://github.com/regardscitoyens/the-law-factory-parser.git
 lafabrique_api_branch: master

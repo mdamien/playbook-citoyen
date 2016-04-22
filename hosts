@@ -1,2 +1,3 @@
 [cocolulu]
-cocolulu.regardscitoyens.org ansible_user=rcdeploy
+cocolulu ansible_host=cocolulu.regardscitoyens.org ansible_user=rcdeploy
+
