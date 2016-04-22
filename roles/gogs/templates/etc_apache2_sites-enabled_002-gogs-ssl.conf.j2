@@ -1,4 +1,4 @@
-<VirtualHost {{ gogs_domain }}:80>
+<VirtualHost *:80>
   ServerName {{ gogs_domain }}
   ServerSignature Off
 
@@ -10,7 +10,7 @@
   </Location>
 </VirtualHost>
 
-<VirtualHost {{ gogs_domain }}:443>
+<VirtualHost *:443>
   ServerName {{ gogs_domain }}
   ServerAdmin {{ contact_email }}
   ServerSignature Off
