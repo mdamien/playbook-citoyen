@@ -80,10 +80,10 @@
   include: import.yml
   when: etherpad_import is defined
 
-- name: (re)démarrage etherpad
+- name: Démarrage etherpad
   service:
     name: etherpad
-    state: restarted
+    state: started
 
 - name: Attente du fonctionnement d'etherpad
   wait_for:
@@ -94,7 +94,7 @@
     src: etc_apache2_sites-enabled_001-etherpad-ssl.conf.j2
     dest: /etc/apache2/sites-enabled/001-etherpad.conf
   notify:
-    - restart apache
+    - reload apache
   when: etherpad_ssl_cert is defined
 
 - name: Création config vhost apache
@@ -102,5 +102,5 @@
     src: etc_apache2_sites-enabled_001-etherpad-nossl.conf.j2
     dest: /etc/apache2/sites-enabled/001-etherpad.conf
   notify:
-    - restart apache
+    - reload apache
   when: etherpad_ssl_cert is not defined

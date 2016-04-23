@@ -87,7 +87,7 @@
     src: etc_apache2_sites-enabled_002-gogs-ssl.conf.j2
     dest: /etc/apache2/sites-enabled/002-gogs.conf
   notify:
-    - restart apache
+    - reload apache
   when: gogs_ssl_cert is defined
 
 - name: Création config vhost apache
@@ -95,5 +95,5 @@
     src: etc_apache2_sites-enabled_002-gogs-nossl.conf.j2
     dest: /etc/apache2/sites-enabled/002-gogs.conf
   notify:
-    - restart apache
+    - reload apache
   when: gogs_ssl_cert is not defined

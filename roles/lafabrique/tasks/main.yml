@@ -54,7 +54,7 @@
     src: etc_apache2_sites-enabled_003-lafabrique-ssl.conf.j2
     dest: /etc/apache2/sites-enabled/003-lafabrique.conf
   notify:
-    - restart apache
+    - reload apache
   when: lafabrique_ssl_cert is defined
 
 - name: Création config vhost apache
@@ -62,5 +62,5 @@
     src: etc_apache2_sites-enabled_003-lafabrique-nossl.conf.j2
     dest: /etc/apache2/sites-enabled/003-lafabrique.conf
   notify:
-    - restart apache
+    - reload apache
   when: lafabrique_ssl_cert is not defined

@@ -8,4 +8,4 @@
     - mariadb-server
     - mariadb-client
     - python-mysqldb
-  notify: restart mysql
+  notify: start mysql
