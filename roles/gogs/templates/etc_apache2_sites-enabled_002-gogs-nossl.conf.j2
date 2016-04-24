@@ -3,6 +3,9 @@
   ServerAdmin {{ contact_email }}
   ServerSignature Off
 
+  CustomLog ${APACHE_LOG_DIR}/gogs_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/gogs_error.log
+
   ProxyVia On
   ProxyRequests Off
   ProxyPass / http://127.0.0.1:{{ gogs_port }}/

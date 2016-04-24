@@ -1,7 +1,5 @@
 ---
 
 dependencies:
-  - { role: common }
-  - { role: apache }
   - { role: mariadb }
   - { role: go }

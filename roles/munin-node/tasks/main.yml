@@ -1,0 +1,27 @@
+---
+
+- name: Installation munin-node
+  apt:
+    pkg: munin-node
+    state: installed
+
+- name: Création du fichier de configuration
+  template:
+    src: etc_munin_munin-node.conf.j2
+    dest: /etc/munin/munin-node.conf
+
+- name: Recherche plugins IP actifs
+  command: 'find /etc/munin/plugins -name "ip_*"'
+  register: active_plugins
+  changed_when: false
+
+- name: Suppression plugins IP
+  file:
+    dest: '{{ item }}'
+    state: absent
+  with_items: '{{ active_plugins.stdout_lines }}'
+
+- name: Redémarrage munin-node
+  service:
+    name: munin-node
+    state: restarted

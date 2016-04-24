@@ -3,6 +3,9 @@
   ServerAdmin {{ contact_email }}
   ServerSignature Off
 
+  CustomLog ${APACHE_LOG_DIR}/lafabrique_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/lafabrique_error.log
+
   DocumentRoot {{ lafabrique_home }}/the-law-factory/prod/
   <Directory "{{ lafabrique_home }}/the-law-factory/prod/">
     Options FollowSymLinks

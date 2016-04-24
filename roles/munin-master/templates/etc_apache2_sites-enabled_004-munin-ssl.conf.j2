@@ -1,0 +1,41 @@
+<VirtualHost *:80>
+  ServerName {{ munin_domain }}
+  ServerSignature Off
+
+  Redirect / https://{{ munin_domain }}/
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ munin_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  CustomLog ${APACHE_LOG_DIR}/munin_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/munin_error.log
+
+  SSLCertificateFile      {{ munin_ssl_cert }}
+  SSLCertificateKeyFile   {{ munin_ssl_key }}
+  SSLEngine On
+
+  DocumentRoot /var/cache/munin/www
+  <Directory /var/cache/munin/www>
+    Options FollowSymLinks
+    AllowOverride None
+
+    AuthType Basic
+    AuthName "Auth required"
+    AuthBasicProvider file
+    AuthUserFile "/etc/apache2/htpasswd.munin"
+    Require valid-user
+  </Directory>
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>

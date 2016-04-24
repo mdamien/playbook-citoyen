@@ -1,9 +1,48 @@
 ---
 
-- name: Rôles affectés à cocolulu
-  hosts: cocolulu
+- name: Récupération infos noeud master munin
+  hosts: munin_master
+  tasks:
+    - debug: msg="OK"
+
+- name: Tous les serveurs
+  hosts: all_servers
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - common
+    - apache
+    - munin-node
+
+- name: Serveur etherpad
+  hosts: pad_server
   remote_user: rcdeploy
   vars_files:
     - vars.yml
   roles:
     - pad
+
+- name: Serveur git (gogs)
+  hosts: gogs_server
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - gogs
+
+- name: Serveur la fabrique de la loi
+  hosts: lfdl_server
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - lafabrique
+
+- name: Master munin
+  hosts: munin_master
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - munin-master

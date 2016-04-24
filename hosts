@@ -1,3 +1,14 @@
-[cocolulu]
+[all_servers]
 cocolulu ansible_host=cocolulu.regardscitoyens.org ansible_user=rcdeploy
 
+[pad_server]
+cocolulu
+
+[lfdl_server]
+cocolulu
+
+[gogs_server]
+cocolulu
+
+[munin_master]
+cocolulu

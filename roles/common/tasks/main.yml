@@ -9,6 +9,7 @@
     - gzip
     - curl
     - python
+    - python-passlib
 
 - name: Creation groupe rcapps
   group:

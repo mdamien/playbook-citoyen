@@ -15,6 +15,9 @@
   ServerAdmin {{ contact_email }}
   ServerSignature Off
 
+  CustomLog ${APACHE_LOG_DIR}/lafabrique_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/lafabrique_error.log
+
   SSLCertificateFile      {{ lafabrique_ssl_cert }}
   SSLCertificateKeyFile   {{ lafabrique_ssl_key }}
   SSLEngine On
