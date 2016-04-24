@@ -29,11 +29,12 @@ Ansible doit répondre avec un "ping: pong" pour chaque cible.
 Les groupes de serveurs suivants sont définis :
 
 * `all_servers` : contient toutes les machines ; y seront exécutés les rôles `apache`, `common` et `munin-node` ;
-* `git_server`: contient le serveur hébergeant gogs ; le rôle `gogs` y est exécuté ;
-* `lfdl_server`: contient le serveur hébergeant La Fabrique de la Loi ; le rôle `lafabrique` y est exécuté ;
-* `pad_server`: contient le serveur hébergeant le pad ; le rôle `pad` y est exécuté ;
+* `git_server` : contient le serveur hébergeant gogs ; le rôle `gogs` y est exécuté ;
+* `lfdl_server` : contient le serveur hébergeant La Fabrique de la Loi ; le rôle `lafabrique` y est exécuté ;
+* `munin_master` : contient le serveur maître Munin ; le rôle `munin-master y est exécuté` ;
+* `pad_server` : contient le serveur hébergeant le pad ; le rôle `pad` y est exécuté.
 
-*Note :* les groupes nommés `*_server` (au singulier) sont destinés à ne contenir qu'une machine, mais fonctionnent aussi bien avec plusieurs serveurs.
+*Note :* les groupes nommés `*_server` (au singulier) ainsi que `munin_master` sont normalement destinés à ne contenir qu'une machine, mais fonctionnent aussi bien avec plusieurs serveurs.
 
 ---
 
