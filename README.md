@@ -110,7 +110,8 @@ Installe munin et le configure pour récupérer les informations de tous les ser
 * `munin_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
 * `munin_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
 * `munin_domain` (`munin.regardscitoyens.org`) : domaine pour le vhost munin
-* `munin_htpassword` (non défini) : doit être défini lors de la première exécution du rôle avec SSL actif ; définit le mot de passe de l'user rcmunin pour l'authentification HTTP.
+* `munin_htpassword` (non défini) : doit être défini lors de la première exécution du rôle avec SSL actif ; définit le mot de passe de l'user rcmunin pour l'authentification HTTP
+* `munin_nodes` (non défini) : permet de spécifier des noeuds monitorés qui ne sont pas dans l'inventory (tous les serveurs dans le groupe `all_servers` sont automatiquement monitorés) ; voir `roles/munin-master/default/main.yml` pour plus de détails
 
 ### munin-node
 

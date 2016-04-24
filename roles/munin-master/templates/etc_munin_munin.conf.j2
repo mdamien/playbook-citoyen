@@ -10,3 +10,11 @@ includedir /etc/munin/munin-conf.d
     address {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
 
 {% endfor %}
+
+{% if munin_nodes is defined %}
+{% for node in munin_nodes %}
+[{{ node['name'] }}]
+    address {{ node['addr'] }}
+
+{% endfor %}
+{% endif %}
