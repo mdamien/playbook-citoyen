@@ -1,16 +1,17 @@
 ---
 # Largement inspiré de https://github.com/jlund/ansible-go (MIT)
 
-- name: Téléchargement go
-  get_url:
-    url: '{{ go_url }}'
-    dest: '{{ go_home }}/{{ go_tgz }}'
-
 - name: Vérification version go actuelle
   command: /usr/local/go/bin/go version
   ignore_errors: yes
   register: go_version
   changed_when: false
+
+- name: Téléchargement go
+  get_url:
+    url: '{{ go_url }}'
+    dest: '{{ go_home }}/{{ go_tgz }}'
+  when: go_version|success or go_version.stdout != go_version_target
 
 - name: Extraction go téléchargé
   unarchive:
