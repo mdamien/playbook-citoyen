@@ -10,14 +10,11 @@
     src: etc_munin_munin.conf.j2
     dest: /etc/munin/munin.conf
 
-- name: Création htpasswd
-  htpasswd:
-    path: /etc/apache2/htpasswd.munin
-    name: rcmunin
-    state: present
-  notify:
-    - reload apache
-  when: munin_ssl_cert is defined and munin_htpassword is not defined
+- name: Vérification htpasswd
+  shell: find /etc/apache2 -name htpasswd.munin | wc -l
+  register: munin_htpasswd_file
+  changed_when: false
+  when: munin_ssl_cert is defined
 
 - name: Création htpasswd
   htpasswd:
@@ -27,7 +24,7 @@
     password: '{{ munin_htpassword }}'
   notify:
     - reload apache
-  when: munin_ssl_cert is defined and munin_htpassword is defined
+  when: munin_htpasswd_file.stdout == '0' and munin_ssl_cert is defined
 
 - name: Création config vhost apache SSL
   template:
