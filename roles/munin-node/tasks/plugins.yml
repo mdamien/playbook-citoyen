@@ -1,0 +1,46 @@
+---
+
+- name: Recherche plugins IP actifs
+  command: 'find /etc/munin/plugins -name "ip_*"'
+  register: active_plugins
+  changed_when: false
+
+- name: Suppression plugins IP
+  file:
+    dest: '{{ item }}'
+    state: absent
+  with_items: '{{ active_plugins.stdout_lines }}'
+
+- name: Recherche apache
+  shell: 'find /etc -mindepth 1 -maxdepth 1 -name apache2 | wc -l'
+  register: find_apache
+  changed_when: false
+
+- name: Activation plugins apache
+  file:
+    path: '/etc/munin/plugins/{{ item }}'
+    src: '/usr/share/munin/plugins/{{ item }}'
+    state: link
+  with_items:
+    - apache_accesses
+    - apache_processes
+    - apache_volume
+  when: find_apache.stdout != '0'
+
+- name: Recherche mysql
+  shell: 'find /etc -mindepth 1 -maxdepth 1 -name mysql | wc -l'
+  register: find_mysql
+  changed_when: false
+
+- name: Activation plugins mysql
+  file:
+    path: '/etc/munin/plugins/{{ item }}'
+    src: '/usr/share/munin/plugins/{{ item }}'
+    state: link
+  with_items:
+    - mysql_bytes
+    - mysql_innodb
+    - mysql_queries
+    - mysql_slowqueries
+    - mysql_threads
+  when: find_mysql.stdout != '0'

@@ -11,7 +11,7 @@
     dest: /etc/munin/munin.conf
 
 - name: Vérification htpasswd
-  shell: find /etc/apache2 -name htpasswd.munin | wc -l
+  shell: find /etc/apache2 -mindepth 1 -maxdepth 1 -name htpasswd.munin | wc -l
   register: munin_htpasswd_file
   changed_when: false
   when: munin_ssl_cert is defined
