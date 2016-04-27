@@ -1,5 +1,15 @@
 ---
 
+- name: Installation paquets utiles
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - python-bs4
+    - python-html5lib
+    - python-requests
+    - python-simplejson
+
 - name: Creation user 'lafabrique'
   user:
     name: lafabrique
@@ -41,6 +51,10 @@
   command: make install
   args:
     chdir: '{{ lafabrique_home }}/the-law-factory'
+
+- name: Ajout d'un dossier
+  include: ajout.yml
+  when: lafabrique_ajout_texte is defined and lafabrique_ajout_dossier is defined
 
 - name: Application des permissions
   file:

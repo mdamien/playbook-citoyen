@@ -1,16 +1,16 @@
-# Playbook Citoyens
+# Playbook Citoyen
 
 Ce projet contient un playbook et des rôles ansible pour les applications de Regards Citoyens.
 
 ## Prérequis
 
-Les playbooks supposent qu'il existe sur les machines cible un utilisateur 'rcdeploy' qui peut exécuter des commandes en `sudo` sans mot de passe.
+Ce playbook suppose :
 
-> Il est conseillé de n'autoriser la connexion de cet utilisateur qu'avec une paire de clés SSH (par exemple en supprimant son mot de passe).
+* L'utilisation de la version 2.0 (ou plus récente) d'ansible
+* L'existence sur les machines cible D'un utilisateur 'rcdeploy' qui peut exécuter des commandes en `sudo` sans mot de passe.
+* Pour l'activation de SSL sur les vhosts Apache, la présence d'une chaine de certificats complête et de la clé privée du serveur sur les machines distantes.
 
-Les applications sont hébergées dans le répertoire `/srv`, chacune avec un utilisateur dédié, sans mot de passe.
-
-La version 2.0 d'ansible (ou plus récente) doit être utilisée.
+Les applications seront hébergées dans le répertoire `/srv`, chacune avec un utilisateur dédié, sans mot de passe.
 
 ### Vérification
 
@@ -58,6 +58,13 @@ Ce rôle installe la fabrique de la loi.
 * `lafabrique_www_branch` (`css-refactor`) : branche git pour le frontend
 * `lafabrique_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas utilisé sur le vhost
 * `lafabrique_ssl_key` (non défini): chemin *distant* vers la clé privée serveur pour le certificat SSL
+
+#### Pour ajouter un texte manuellement
+
+Créer le fichier de procédure (`dossier.csv`) et définir les deux variables suivantes :
+
+* `lafabrique_ajout_texte`: référence courte du texte (ex: `pjl15-235` ou `pjl15-renseignement`)
+* `lafabrique_ajout_dossier`: chemin vers le fichier de procédure à utiliser
 
 ---
 

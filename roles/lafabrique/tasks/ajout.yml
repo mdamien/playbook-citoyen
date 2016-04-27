@@ -1,0 +1,31 @@
+---
+
+- name: Création répertoire PJL
+  file:
+    path: '{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp'
+    state: directory
+
+- name: Copie dossier.csv
+  copy:
+    src: '{{ lafabrique_ajout_dossier }}'
+    dest: '{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp/dossier.csv'
+
+- name: Génération données (scripts/collectdata/generate_data)
+  shell: 'bash generate_data.sh {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp/dossier.csv {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}'
+  args:
+    chdir: '{{ lafabrique_home }}/the-law-factory-parser/scripts/collectdata'
+
+- name: Correction procédure (scripts/collectdata/reorder_interventions_and_correct_procedure)
+  shell: 'perl reorder_interventions_and_correct_procedure.pl "{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/procedure"'
+  args:
+    chdir: '{{ lafabrique_home }}/the-law-factory-parser/scripts/collectdata'
+
+- name: Conversion procédure JSON (scripts/collectdata/procedure2json)
+  shell: 'python procedure2json.py "{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/procedure/procedure.csv" > "{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/procedure/procedure.json"'
+  args:
+    chdir: '{{ lafabrique_home }}/the-law-factory-parser/scripts/collectdata'
+
+- name: Génération données visu (scripts/generate_vizudata)
+  shell: 'bash generate_vizudata.sh {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}'
+  args:
+    chdir: '{{ lafabrique_home }}/the-law-factory-parser/scripts'

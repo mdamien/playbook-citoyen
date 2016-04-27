@@ -1,4 +1,5 @@
 ---
+
 - name: Installation paquets utiles
   apt:
     pkg: '{{ item }}'
@@ -8,6 +9,7 @@
     - htop
     - gzip
     - curl
+    - perl
     - python
     - python-passlib
 
