@@ -5,13 +5,14 @@
     pkg: '{{ item }}'
     state: installed
   with_items:
-    - git
-    - htop
-    - gzip
     - curl
+    - git
+    - gzip
+    - htop
     - perl
     - python
     - python-passlib
+    - subversion
 
 - name: Creation groupe rcapps
   group:
