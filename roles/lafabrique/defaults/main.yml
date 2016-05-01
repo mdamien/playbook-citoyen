@@ -10,6 +10,7 @@ lafabrique_www_repo: git://github.com/regardscitoyens/the-law-factory.git
 lafabrique_www_branch: css-refactor
 
 # lafabrique_ssl_cert: /remote/path/to/cert
+# lafabrique_ssl_chain: /remote/path/to/chain (optional)
 # lafabrique_ssl_key: /remote/path/to/key
 
 # lafabrique_ajout_texte: pjl16-nouvelles_libertes_entreprises_actifs

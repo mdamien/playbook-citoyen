@@ -31,6 +31,11 @@
 
   SSLCertificateFile      {{ etherpad_ssl_cert }}
   SSLCertificateKeyFile   {{ etherpad_ssl_key }}
+
+{% if etherpad_ssl_chain is defined %}
+  SSLCertificateChainFile {{ etherpad_ssl_chain }}
+{% endif %}
+
   SSLEngine On
 
   RewriteEngine On

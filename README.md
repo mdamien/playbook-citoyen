@@ -57,6 +57,7 @@ Ce rôle installe la fabrique de la loi.
 * `lafabrique_www_repo` (`git://github.com/regardscitoyens/the-law-factory.git`) : repo git pour le frontend
 * `lafabrique_www_branch` (`css-refactor`) : branche git pour le frontend
 * `lafabrique_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas utilisé sur le vhost
+* `lafabrique_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
 * `lafabrique_ssl_key` (non défini): chemin *distant* vers la clé privée serveur pour le certificat SSL
 
 #### Pour ajouter un texte manuellement
@@ -103,6 +104,7 @@ Installe gogs et configure un reverse-proxy apache pour y accéder avec un vhost
 * `gogs_port` (`3000`) : port d'écoute local (interface loopback uniquement)
 * `gogs_domain` (`git.regardscitoyens.org`) : domaine
 * `gogs_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
+* `gogs_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
 * `gogs_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
 * `gogs_db_name` (`gogs`) : nom de la BDD mysql
 * `gogs_db_user` (`gogs`) : nom de l'user mysql
@@ -115,6 +117,7 @@ Installe munin et le configure pour récupérer les informations de tous les ser
 *Variables :*
 
 * `munin_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
+* `munin_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
 * `munin_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
 * `munin_domain` (`munin.regardscitoyens.org`) : domaine pour le vhost munin
 * `munin_htpassword` (non défini) : doit être défini lors de la première exécution du rôle avec SSL actif ; définit le mot de passe de l'user rcmunin pour l'authentification HTTP
@@ -136,6 +139,7 @@ Installe etherpad-lite et configure un reverse-proxy apache pour y accéder avec
 * `etherpad_home` (`/srv/etherpad`) : homedir pour l'user etherpad
 * `etherpad_port` (`9001`) : port d'écoute local (interface loopback uniquement)
 * `etherpad_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
+* `etherpad_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
 * `etherpad_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
 * `etherpad_domain` (`pad.regardscitoyens.org`) : domaine du pad
 * `etherpad_db_name` (`etherpad`) : nom de la BDD mysql

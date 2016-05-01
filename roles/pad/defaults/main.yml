@@ -7,6 +7,7 @@ etherpad_port: 9001
 etherpad_domain: pad.regardscitoyens.org
 
 # etherpad_ssl_cert: /remote/path/to/cert
+# etherpad_ssl_chain: /remote/path/to/chain (optional)
 # etherpad_ssl_key: /remote/path/to/key
 
 etherpad_db_name: etherpad

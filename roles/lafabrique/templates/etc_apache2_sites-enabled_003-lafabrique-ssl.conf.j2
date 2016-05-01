@@ -20,6 +20,11 @@
 
   SSLCertificateFile      {{ lafabrique_ssl_cert }}
   SSLCertificateKeyFile   {{ lafabrique_ssl_key }}
+
+{% if lafabrique_ssl_chain is defined %}
+  SSLCertificateChainFile {{ lafabrique_ssl_chain }}
+{% endif %}
+
   SSLEngine On
 
   DocumentRoot {{ lafabrique_home }}/the-law-factory/prod/

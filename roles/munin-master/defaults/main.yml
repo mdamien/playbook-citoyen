@@ -3,6 +3,7 @@
 munin_domain: munin.regardscitoyens.org
 
 # munin_ssl_cert: /remote/path/to/cert
+# munin_ssl_chain: /remote/path/to/chain (optional)
 # munin_ssl_key: /remote/path/to/key
 
 # munin_htpassword: 12345

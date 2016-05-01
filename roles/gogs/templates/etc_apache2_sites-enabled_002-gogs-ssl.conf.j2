@@ -31,6 +31,11 @@
 
   SSLCertificateFile      {{ gogs_ssl_cert }}
   SSLCertificateKeyFile   {{ gogs_ssl_key }}
+
+{% if gogs_ssl_chain is defined %}
+  SSLCertificateChainFile {{ gogs_ssl_chain }}
+{% endif %}
+
   SSLEngine On
 
   <Proxy *>

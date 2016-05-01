@@ -20,6 +20,11 @@
 
   SSLCertificateFile      {{ munin_ssl_cert }}
   SSLCertificateKeyFile   {{ munin_ssl_key }}
+
+{% if munin_ssl_chain is defined %}
+  SSLCertificateChainFile {{ munin_ssl_chain }}
+{% endif %}
+
   SSLEngine On
 
   DocumentRoot /var/cache/munin/www

@@ -7,6 +7,7 @@ gogs_port: 3000
 gogs_domain: git.regardscitoyens.org
 
 # gogs_ssl_cert: /remote/path/to/cert
+# gogs_ssl_chain: /remote/path/to/chain (optional)
 # gogs_ssl_key: /remote/path/to/key
 
 gogs_db_name: gogs
