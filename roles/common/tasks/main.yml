@@ -1,5 +1,12 @@
 ---
 
+- name: jessie repo backports included
+  apt_repository: repo='{{ item }}' state=present
+  with_items:
+   - "http://mirrors.online.net/debian jessie main contrib non-free"
+   - "http://security.debian.org/ jessie/updates main contrib non-free"
+   - "http://mirrors.online.net/debian jessie-backports main contrib non-free"
+
 - name: Installation paquets utiles
   apt:
     pkg: '{{ item }}'
@@ -13,6 +20,8 @@
     - python
     - python-passlib
     - subversion
+    - letsencrypt
+    - python-letsencrypt-apache
 
 - name: Creation groupe rcapps
   group:
