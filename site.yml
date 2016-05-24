@@ -31,6 +31,14 @@
   roles:
     - gogs
 
+- name: Serveur piwik
+  hosts: piwik_server
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - piwik
+
 - name: Serveur la fabrique de la loi
   hosts: lfdl_server
   remote_user: rcdeploy

@@ -1,0 +1,83 @@
+---
+
+- name: Creation user 'piwik'
+  user:
+    name: piwik
+    state: present
+    group: rcapps
+    home: '{{ piwik_home }}'
+
+- name: Vérification mot de passe 'piwik'
+  shell: 'cat /etc/shadow | egrep ^piwik: | cut -d ":" -f 2 | wc -c'
+  register: piwik_crypted_password
+  changed_when: false
+
+- name: Suppression password 'piwik'
+  command: 'passwd -d piwik'
+  when: piwik_crypted_password.stdout != '1'
+
+- name: Création BDD
+  mysql_db:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ piwik_db_name }}'
+    state: present
+
+- name: Création user BDD
+  mysql_user:
+    config_file: /etc/mysql/debian.cnf
+    name: '{{ piwik_db_user }}'
+    password: '{{ piwik_db_pass }}'
+    priv: '{{ piwik_db_name }}.*:ALL'
+    state: present
+
+- name: Téléchargement Piwik
+  get_url:
+    url: '{{ piwik_url }}'
+    dest: '{{ piwik_home }}/piwik.zip'
+
+- name: Décompression Piwik
+  unarchive:
+    src: '{{ piwik_home }}/piwik.zip'
+    dest: '{{ piwik_home }}'
+    copy: no
+    creates: '{{ piwik_home }}/piwik'
+
+- name: Application des permissions
+  file:
+    owner: piwik
+    group: rcapps
+    recurse: yes
+    path: '{{ piwik_home }}'
+
+- name: Application des permissions en écriture (piwik/tmp et piwik/config)
+  file:
+    mode: og+w
+    recurse: yes
+    path: '{{ piwik_home }}/piwik/{{ item }}'
+  with_items:
+    - config
+    - tmp
+
+- name: Création config vhost apache SSL
+  template:
+    src: etc_apache2_sites-available_005-piwik-ssl.conf.j2
+    dest: /etc/apache2/sites-available/005-piwik.conf
+  notify:
+    - reload apache
+  when: piwik_ssl_cert is defined
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-available_005-piwik-nossl.conf.j2
+    dest: /etc/apache2/sites-available/005-piwik.conf
+  notify:
+    - reload apache
+  when: piwik_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/005-piwik.conf
+    path: /etc/apache2/sites-enabled/005-piwik.conf
+    state: link
+  notify:
+    - reload apache

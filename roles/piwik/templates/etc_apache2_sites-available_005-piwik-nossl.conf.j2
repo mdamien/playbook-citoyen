@@ -1,0 +1,25 @@
+<VirtualHost *:80>
+  ServerName {{ piwik_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  CustomLog ${APACHE_LOG_DIR}/piwik_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/piwik_error.log
+
+  DocumentRoot {{ piwik_home }}/piwik
+
+  <Directory {{ piwik_home }}/piwik>
+    Options FollowSymLinks
+    AllowOverride None
+    Require all granted
+  </Directory>
+
+  <Directory {{ piwik_home }}/piwik/config>
+    Deny from all
+  </Directory>
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>

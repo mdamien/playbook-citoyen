@@ -32,6 +32,7 @@ Les groupes de serveurs suivants sont définis :
 * `git_server` : contient le serveur hébergeant gogs ; le rôle `gogs` y est exécuté ;
 * `lfdl_server` : contient le serveur hébergeant La Fabrique de la Loi ; le rôle `lafabrique` y est exécuté ;
 * `munin_master` : contient le serveur maître Munin ; le rôle `munin-master` y est exécuté ;
+* `piwik_server`: contient le serveur hébergeant Piwik ; le rôle `piwik` y est exécuté ;
 * `pad_server` : contient le serveur hébergeant le pad ; le rôle `pad` y est exécuté.
 
 *Note :* les groupes nommés `*_server` (au singulier) ainsi que `munin_master` sont normalement destinés à ne contenir qu'une machine, mais fonctionnent aussi bien avec plusieurs serveurs.
@@ -147,6 +148,24 @@ Installe etherpad-lite et configure un reverse-proxy apache pour y accéder avec
 * `etherpad_db_pass` (`etherpad`) : mot de passe mysql
 * `etherpad_import` (non défini) : chemin vers un fichier de données à importer ; il doit s'agit d'un dump SQL compressé en XZ. **Attention, toute donnée existante sera écrasée de manière irréversible si cette variable est définie.**
 
+### piwik
+
+*Dépend de : mariadb, php*
+
+Installe piwik et configure un reverse-proxy apache pour y accéder avec un vhost.
+
+*Variables :*
+
+* `piwik_url` (`http://builds.piwik.org/piwik.zip`) : URL de l'archive ZIP de la release piwik à installer.
+* `piwik_home` (`/srv/piwik`) : homedir pour l'user piwik
+* `piwik_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
+* `piwik_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
+* `piwik_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
+* `piwik_domain` (`stats.regardscitoyens.org`) : domaine du pad
+* `piwik_db_name` (`piwik`) : nom de la BDD mysql
+* `piwik_db_user` (`piwik`) : nom de l'user mysql
+* `piwik_db_pass` (`piwik`) : mot de passe mysql
+
 ---
 
 ## Rôles techniques
@@ -167,3 +186,7 @@ Installe go depuis la distribution binaire officielle.
 ### mariadb
 
 Installe mariadb.
+
+### php
+
+Installe PHP ainsi que les extensions `gd`, `geoip` et `mysql-nd`.

@@ -10,5 +10,8 @@ cocolulu
 [gogs_server]
 cocolulu
 
+[piwik_server]
+cocolulu
+
 [munin_master]
 cocolulu
