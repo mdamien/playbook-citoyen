@@ -11,7 +11,7 @@
     dest: '{{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp/dossier.csv'
 
 - name: Génération données (scripts/collectdata/generate_data)
-  shell: 'bash generate_data.sh {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp/dossier.csv {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}'
+  shell: 'bash generate_data.sh {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }}/.tmp/dossier.csv {{ lafabrique_home }}/the-law-factory-parser/data/{{ lafabrique_ajout_texte }} 1'
   args:
     chdir: '{{ lafabrique_home }}/the-law-factory-parser/scripts/collectdata'
 
