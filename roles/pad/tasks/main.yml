@@ -91,16 +91,24 @@
 
 - name: Création config vhost apache SSL
   template:
-    src: etc_apache2_sites-enabled_001-etherpad-ssl.conf.j2
-    dest: /etc/apache2/sites-enabled/001-etherpad.conf
+    src: etc_apache2_sites-available_001-etherpad-ssl.conf.j2
+    dest: /etc/apache2/sites-available/001-etherpad.conf
   notify:
     - reload apache
   when: etherpad_ssl_cert is defined
 
 - name: Création config vhost apache
   template:
-    src: etc_apache2_sites-enabled_001-etherpad-nossl.conf.j2
-    dest: /etc/apache2/sites-enabled/001-etherpad.conf
+    src: etc_apache2_sites-available_001-etherpad-nossl.conf.j2
+    dest: /etc/apache2/sites-available/001-etherpad.conf
   notify:
     - reload apache
   when: etherpad_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/001-etherpad.conf
+    path: /etc/apache2/sites-enabled/001-etherpad.conf
+    state: link
+  notify:
+    - reload apache

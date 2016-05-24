@@ -65,16 +65,24 @@
 
 - name: Création config vhost apache SSL
   template:
-    src: etc_apache2_sites-enabled_003-lafabrique-ssl.conf.j2
-    dest: /etc/apache2/sites-enabled/003-lafabrique.conf
+    src: etc_apache2_sites-available_003-lafabrique-ssl.conf.j2
+    dest: /etc/apache2/sites-available/003-lafabrique.conf
   notify:
     - reload apache
   when: lafabrique_ssl_cert is defined
 
 - name: Création config vhost apache
   template:
-    src: etc_apache2_sites-enabled_003-lafabrique-nossl.conf.j2
-    dest: /etc/apache2/sites-enabled/003-lafabrique.conf
+    src: etc_apache2_sites-available_003-lafabrique-nossl.conf.j2
+    dest: /etc/apache2/sites-available/003-lafabrique.conf
   notify:
     - reload apache
   when: lafabrique_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/003-lafabrique.conf
+    path: /etc/apache2/sites-enabled/003-lafabrique.conf
+    state: link
+  notify:
+    - reload apache

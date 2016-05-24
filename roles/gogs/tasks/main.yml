@@ -84,16 +84,24 @@
 
 - name: Création config vhost apache SSL
   template:
-    src: etc_apache2_sites-enabled_002-gogs-ssl.conf.j2
-    dest: /etc/apache2/sites-enabled/002-gogs.conf
+    src: etc_apache2_sites-available_002-gogs-ssl.conf.j2
+    dest: /etc/apache2/sites-available/002-gogs.conf
   notify:
     - reload apache
   when: gogs_ssl_cert is defined
 
 - name: Création config vhost apache
   template:
-    src: etc_apache2_sites-enabled_002-gogs-nossl.conf.j2
-    dest: /etc/apache2/sites-enabled/002-gogs.conf
+    src: etc_apache2_sites-available_002-gogs-nossl.conf.j2
+    dest: /etc/apache2/sites-available/002-gogs.conf
   notify:
     - reload apache
   when: gogs_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/002-gogs.conf
+    path: /etc/apache2/sites-enabled/002-gogs.conf
+    state: link
+  notify:
+    - reload apache

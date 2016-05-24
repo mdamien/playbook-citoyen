@@ -28,16 +28,24 @@
 
 - name: Création config vhost apache SSL
   template:
-    src: etc_apache2_sites-enabled_004-munin-ssl.conf.j2
-    dest: /etc/apache2/sites-enabled/004-munin.conf
+    src: etc_apache2_sites-available_004-munin-ssl.conf.j2
+    dest: /etc/apache2/sites-available/004-munin.conf
   notify:
     - reload apache
   when: munin_ssl_cert is defined
 
 - name: Création config vhost apache
   template:
-    src: etc_apache2_sites-enabled_004-munin-nossl.conf.j2
-    dest: /etc/apache2/sites-enabled/004-munin.conf
+    src: etc_apache2_sites-available_004-munin-nossl.conf.j2
+    dest: /etc/apache2/sites-available/004-munin.conf
   notify:
     - reload apache
   when: munin_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/004-munin.conf
+    path: /etc/apache2/sites-enabled/004-munin.conf
+    state: link
+  notify:
+    - reload apache
