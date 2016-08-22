@@ -29,16 +29,14 @@
   ProxyPassReverse / http://127.0.0.1:{{ etherpad_port }}/
   ProxyPreserveHost On
 
-  SSLCertificateFile      {{ etherpad_ssl_cert }}
-  SSLCertificateKeyFile   {{ etherpad_ssl_key }}
-
-{% if etherpad_ssl_chain is defined %}
-  SSLCertificateChainFile {{ etherpad_ssl_chain }}
-{% endif %}
+  SSLCertificateFile      /var/lib/letsencrypt.sh/certs/{{ etherpad_domain }}/cert.pem
+  SSLCertificateKeyFile   /var/lib/letsencrypt.sh/certs/{{ etherpad_domain }}/privkey.pem
+  SSLCertificateChainFile /var/lib/letsencrypt.sh/certs/{{ etherpad_domain }}/fullchain.pem
 
   SSLEngine On
 
   RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule /p/*$ https://{{ etherpad_domain }}/ [NC,L]
   RewriteCond %{REQUEST_URI} !^/locales/
   RewriteCond %{REQUEST_URI} !^/locales.json
@@ -56,6 +54,8 @@
   RewriteCond %{REQUEST_URI} !^/jserror
   RewriteCond %{REQUEST_URI} !/favicon.ico
   RewriteCond %{REQUEST_URI} !/robots.txt
+  RewriteCond %{REQUEST_URI} !/\.
+  RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^/+(.+)$ https://{{ etherpad_domain }}/p/$1 [L]
 
   <Proxy *>

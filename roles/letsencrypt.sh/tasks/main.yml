@@ -1,0 +1,33 @@
+---
+
+- name: Installation packet letsencrypt.sh
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+#  notify:
+#    - reload apache
+  with_items:
+    - letsencrypt.sh
+    - letsencrypt.sh-apache2
+
+- name: Installation de hook.sh qui relance apache
+  template:
+    src: hook.sh.j2
+    dest: /etc/letsencrypt.sh/hook.sh
+    mode: a+rx
+
+- name: Installation de la configuration letsencrupt.sh
+  template:
+    src: config.sh.j2
+    dest: /etc/letsencrypt.sh/conf.d/config.sh
+
+- name: Installation de la déclaration des domaines
+  template:
+    src: domains.txt.j2
+    dest: /var/lib/letsencrypt.sh/domains.txt
+
+- name: Inscription de letsencrypt.sh dans la cron hebdo
+  template:
+    src: cron_weekly.sh.j2
+    dest: /etc/cron.weekly/letsencrypt.sh
+    mode: a+rx
