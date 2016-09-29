@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. {{ parlapi_home }}/env/bin/activate
+
+export PARLAPI_DEBUG=True
+{{ parlapi_home }}/repo/bin/update_all.sh

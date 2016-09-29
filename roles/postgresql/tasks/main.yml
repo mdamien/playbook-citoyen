@@ -1,0 +1,10 @@
+---
+
+- name: Installation postgresql
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - postgresql-9.4
+    - postgresql-server-dev-9.4
+    - python-psycopg2

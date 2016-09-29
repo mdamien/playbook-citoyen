@@ -31,6 +31,14 @@
   roles:
     - gogs
 
+- name: Serveur parlapi
+  hosts: parlapi_server
+  remote_user: rcdeploy
+  vars_files:
+    - vars.yml
+  roles:
+    - parlapi
+
 - name: Serveur piwik
   hosts: piwik_server
   remote_user: rcdeploy

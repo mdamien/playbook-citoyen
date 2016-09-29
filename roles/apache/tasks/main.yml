@@ -5,6 +5,13 @@
     pkg: apache2
     state: installed
 
+- name: Installation modules utiles
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - libapache2-mod-wsgi
+
 - name: Activation modules utiles
   apache2_module:
     name: '{{ item }}'
@@ -13,6 +20,7 @@
     - rewrite
     - proxy
     - ssl
+    - wsgi
 
 - name: Suppression index par défaut
   file:

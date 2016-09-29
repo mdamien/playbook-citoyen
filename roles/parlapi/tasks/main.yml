@@ -1,0 +1,127 @@
+---
+
+- name: Creation user 'parlapi'
+  user:
+    name: parlapi
+    state: present
+    group: rcapps
+    home: '{{ parlapi_home }}'
+
+- name: Vérification mot de passe 'parlapi'
+  shell: 'cat /etc/shadow | egrep ^parlapi: | cut -d ":" -f 2 | wc -c'
+  register: parlapi_crypted_password
+  changed_when: false
+
+- name: Suppression password 'parlapi'
+  command: 'passwd -d parlapi'
+  when: parlapi_crypted_password.stdout != '1'
+
+- name: Création user BDD
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name: '{{ parlapi_db_user }}'
+    password: '{{ parlapi_db_pass }}'
+
+- name: Création BDD
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: '{{ parlapi_db_name }}'
+    owner: '{{ parlapi_db_user }}'
+
+- name: Clonage repository git
+  git:
+    repo: '{{ parlapi_repo }}'
+    dest: '{{ parlapi_home }}/repo'
+    version: '{{ parlapi_branch }}'
+    update: yes
+    accept_hostkey: True
+
+- name: Mise à jour pip/setuptools
+  pip:
+    name: '{{ item }}'
+    state: latest
+    virtualenv: '{{ parlapi_home }}/env'
+  with_items:
+    - pip
+    - setuptools
+
+- name: Installation dépendances python
+  pip:
+    name: '.'
+    extra_args: -Ue
+    virtualenv: '{{ parlapi_home }}/env'
+    chdir: '{{ parlapi_home }}/repo'
+
+- name: Création script WSGI
+  template:
+    src: parlapi.wsgi.j2
+    dest: '{{ parlapi_home }}/parlapi.wsgi'
+
+- name: Création script mise à jour
+  template:
+    src: parlapi_update.sh.j2
+    dest: '{{ parlapi_home }}/parlapi_update.sh'
+    mode: u+rwx
+
+- name: Création répertoire data
+  file:
+    path: '{{ parlapi_home }}/data'
+    state: directory
+    mode: 0755
+
+- name: Application des permissions
+  file:
+    owner: parlapi
+    group: rcapps
+    recurse: yes
+    path: '{{ parlapi_home }}'
+
+- name: Création schéma BDD
+  command: '{{ parlapi_home }}/env/bin/parlapi createdb'
+  environment:
+    PARLAPI_CONFIG: '{{ parlapi_env_config }}'
+    PARLAPI_DB_URL: '{{ parlapi_env_dburl }}'
+    PARLAPI_DATA_DIR: '{{ parlapi_env_datadir }}'
+
+- name: Définition des variables crontab
+  cron:
+    name: '{{ item.var }}'
+    value: '{{ item.value }}'
+    user: parlapi
+    env: yes
+  with_items:
+    - { var: 'PARLAPI_CONFIG', value: '{{ parlapi_env_config }}' }
+    - { var: 'PARLAPI_DB_URL', value: '{{ parlapi_env_dburl }}' }
+    - { var: 'PARLAPI_DATA_DIR', value: '{{ parlapi_env_datadir }}' }
+
+- name: Ajout job de mise à jour au crontab
+  cron:
+    name: 'parlapi data update'
+    minute: 0
+    hour: 3
+    state: present
+    user: parlapi
+    job: '{{ parlapi_home }}/parlapi_update.sh'
+
+- name: Création config vhost apache SSL
+  template:
+    src: etc_apache2_sites-available_006-parlapi-ssl.conf.j2
+    dest: /etc/apache2/sites-available/006-parlapi.conf
+  notify: reload apache
+  when: parlapi_ssl_cert is defined
+
+- name: Création config vhost apache
+  template:
+    src: etc_apache2_sites-available_006-parlapi-nossl.conf.j2
+    dest: /etc/apache2/sites-available/006-parlapi.conf
+  notify: reload apache
+  when: parlapi_ssl_cert is not defined
+
+- name: Création lien config vhost apache
+  file:
+    src: /etc/apache2/sites-available/006-parlapi.conf
+    path: /etc/apache2/sites-enabled/006-parlapi.conf
+    state: link
+  notify: reload apache
