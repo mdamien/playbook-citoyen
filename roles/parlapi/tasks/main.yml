@@ -38,6 +38,14 @@
     update: yes
     accept_hostkey: True
 
+- name: Installation libyajl
+  apt:
+    pkg: '{{ item }}'
+    state: installed
+  with_items:
+    - libyajl2
+    - libyajl-dev
+
 - name: Mise à jour pip/setuptools
   pip:
     name: '{{ item }}'
@@ -96,14 +104,35 @@
     - { var: 'PARLAPI_DB_URL', value: '{{ parlapi_env_dburl }}' }
     - { var: 'PARLAPI_DATA_DIR', value: '{{ parlapi_env_datadir }}' }
 
-- name: Ajout job de mise à jour au crontab
+- name: Crontab - amendements
   cron:
-    name: 'parlapi data update'
+    name: 'parlapi amendements'
     minute: 0
-    hour: 3
+    hour: 1
+    weekday: 2,4
     state: present
     user: parlapi
-    job: '{{ parlapi_home }}/parlapi_update.sh'
+    job: '{{ parlapi_home }}/parlapi_update.sh update_amendements_an'
+
+- name: Crontab - acteurs
+  cron:
+    name: 'parlapi acteurs'
+    minute: 0
+    hour: 1
+    weekday: 0
+    state: present
+    user: parlapi
+    job: '{{ parlapi_home }}/parlapi_update.sh update_amo_an'
+
+- name: Crontab - dossiers
+  cron:
+    name: 'parlapi dossiers'
+    minute: 0
+    hour: 1
+    weekday: 6
+    state: present
+    user: parlapi
+    job: '{{ parlapi_home }}/parlapi_update.sh update_dossiers_an'
 
 - name: Création config vhost apache SSL
   template:
@@ -125,3 +154,8 @@
     path: /etc/apache2/sites-enabled/006-parlapi.conf
     state: link
   notify: reload apache
+
+- name: Rechargement WSGI
+  file:
+    path: '{{ parlapi_home }}/parlapi.wsgi'
+    state: touch
