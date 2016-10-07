@@ -134,6 +134,15 @@
     user: parlapi
     job: '{{ parlapi_home }}/parlapi_update.sh update_dossiers_an'
 
+- name: Crontab - scrutins
+  cron:
+    name: 'parlapi dossiers'
+    minute: 30
+    hour: 1
+    state: present
+    user: parlapi
+    job: '{{ parlapi_home }}/parlapi_update.sh update_scrutins_an'
+
 - name: Création config vhost apache SSL
   template:
     src: etc_apache2_sites-available_006-parlapi-ssl.conf.j2
