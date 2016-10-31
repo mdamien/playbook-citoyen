@@ -136,12 +136,21 @@
 
 - name: Crontab - scrutins
   cron:
-    name: 'parlapi dossiers'
+    name: 'parlapi scrutins'
     minute: 30
     hour: 1
     state: present
     user: parlapi
     job: '{{ parlapi_home }}/parlapi_update.sh update_scrutins_an'
+
+- name: Crontab - réunions
+  cron:
+    name: 'parlapi reunions'
+    minute: 30
+    hour: 2
+    state: present
+    user: parlapi
+    job: '{{ parlapi_home }}/parlapi_update.sh update_reunions_an'
 
 - name: Création config vhost apache SSL
   template:
