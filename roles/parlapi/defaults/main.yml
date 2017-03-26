@@ -1,0 +1,21 @@
+---
+
+parlapi_repo: git://github.com/regardscitoyens/parlapi.git
+parlapi_branch: master
+parlapi_home: /srv/parlapi
+
+parlapi_domain: www.parlapi.fr
+
+# parlapi_ssl_cert: /remote/path/to/cert
+# parlapi_ssl_chain: /remote/path/to/chain (optional)
+# parlapi_ssl_key: /remote/path/to/key
+
+parlapi_db_user: parlapi
+parlapi_db_pass: parlapi
+parlapi_db_name: parlapi
+
+parlapi_env_config: parlapi.config.EnvironmentConfig
+parlapi_env_datadir: '{{ parlapi_home }}/data'
+parlapi_env_dburl: 'postgresql://{{ parlapi_db_user }}:{{ parlapi_db_pass }}@localhost:5432/{{ parlapi_db_name }}'
+# parlapi_env_piwik_host: stats.regardscitoyens.org
+# parlapi_env_piwik_id: 4

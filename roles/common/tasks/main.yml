@@ -5,9 +5,9 @@
     repo: '{{ item }}'
     state: present
   with_items:
-   - "http://mirrors.online.net/debian jessie main contrib non-free"
-   - "http://security.debian.org/ jessie/updates main contrib non-free"
-   - "http://mirrors.online.net/debian jessie-backports main contrib non-free"
+   - "deb http://mirrors.online.net/debian jessie main contrib non-free"
+   - "deb http://security.debian.org/ jessie/updates main contrib non-free"
+   - "deb http://mirrors.online.net/debian jessie-backports main contrib non-free"
 
 - name: Installation paquets utiles
   apt:
@@ -23,8 +23,10 @@
     - python
     - python-letsencrypt-apache
     - python-passlib
+    - python-pip
     - subversion
     - unzip
+    - virtualenv
 
 - name: Creation groupe rcapps
   group:

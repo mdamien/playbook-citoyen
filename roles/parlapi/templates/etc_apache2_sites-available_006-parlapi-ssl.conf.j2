@@ -1,0 +1,44 @@
+<VirtualHost *:80>
+  ServerName {{ piwik_domain }}
+  ServerSignature Off
+
+  Redirect / https://{{ piwik_domain }}/
+
+  <Location />
+    Order deny,allow
+    Allow from all
+  </Location>
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName {{ piwik_domain }}
+  ServerAdmin {{ contact_email }}
+  ServerSignature Off
+
+  CustomLog ${APACHE_LOG_DIR}/piwik_access.log combined
+  ErrorLog ${APACHE_LOG_DIR}/piwik_error.log
+
+  SSLCertificateFile      {{ piwik_ssl_cert }}
+  SSLCertificateKeyFile   {{ piwik_ssl_key }}
+
+{% if piwik_ssl_chain is defined %}
+  SSLCertificateChainFile {{ piwik_ssl_chain }}
+{% endif %}
+
+  SSLEngine On
+
+  SetEnv PARLAPI_CONFIG {{ parlapi_env_config }}
+  SetEnv PARLAPI_DB_URL {{ parlapi_env_dburl }}
+  SetEnv PARLAPI_DATA_DIR {{ parlapi_env_datadir }}
+  SetEnv PARLAPI_PIWIK_HOST {{ parlapi_env_piwik_host }}
+  SetEnv PARLAPI_PIWIK_ID {{ parlapi_env_piwik_id }}
+
+  WSGIDaemonProcess parlapi user=parlapi group=rcapps threads=5
+  WSGIScriptAlias / {{ parlapi_home }}/parlapi.wsgi
+
+  <Directory {{ parlapi_home }}>
+    WSGIProcessGroup parlapi
+    WSGIApplicationGroup %{GLOBAL}
+    Require all granted
+  </Directory>
+</VirtualHost>

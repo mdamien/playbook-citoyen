@@ -33,7 +33,8 @@ Les groupes de serveurs suivants sont définis :
 * `lfdl_server` : contient le serveur hébergeant La Fabrique de la Loi ; le rôle `lafabrique` y est exécuté ;
 * `munin_master` : contient le serveur maître Munin ; le rôle `munin-master` y est exécuté ;
 * `piwik_server`: contient le serveur hébergeant Piwik ; le rôle `piwik` y est exécuté ;
-* `pad_server` : contient le serveur hébergeant le pad ; le rôle `pad` y est exécuté.
+* `pad_server` : contient le serveur hébergeant le pad ; le rôle `pad` y est exécuté ;
+* `parlapi_server`: contient le serveur hébergeant ParlAPI ; le rôle `parlapi` y est exécuté.
 
 *Note :* les groupes nommés `*_server` (au singulier) ainsi que `munin_master` sont normalement destinés à ne contenir qu'une machine, mais fonctionnent aussi bien avec plusieurs serveurs.
 
@@ -148,6 +149,23 @@ Installe etherpad-lite et configure un reverse-proxy apache pour y accéder avec
 * `etherpad_db_pass` (`etherpad`) : mot de passe mysql
 * `etherpad_import` (non défini) : chemin vers un fichier de données à importer ; il doit s'agit d'un dump SQL compressé en XZ. **Attention, toute donnée existante sera écrasée de manière irréversible si cette variable est définie.**
 
+### parlapi
+
+*Dépend de : postgresql*
+
+*Variables :*
+
+* `parlapi_repo` (`git://github.com/regardscitoyens/parlapi.git`) : repository GIT à utiliser
+* `parlapi_branch` (`master`) : branche GIT à utiliser
+* `parlapi_home` (`/srv/parlapi`) : homedir pour l'user parlapi
+* `parlapi_ssl_cert` (non défini) : chemin *distant* vers le certificat SSL à utiliser ; s'il est indéfini, SSL ne sera pas activé sur le vhost
+* `parlapi_ssl_chain` (non défini) : chemin *distant* vers la chaine de certificats à utiliser
+* `parlapi_ssl_key` (non défini) : chemin *distant* vers la clé privée serveur pour le certificat SSL
+* `parlapi_domain` (`www.parlapi.fr`) : domaine
+* `parlapi_db_name` (`parlapi`) : nom de la BDD mysql
+* `parlapi_db_user` (`parlapi`) : nom de l'user mysql
+* `parlapi_db_pass` (`parlapi`) : mot de passe mysql
+
 ### piwik
 
 *Dépend de : mariadb, php*
@@ -190,3 +208,7 @@ Installe mariadb.
 ### php
 
 Installe PHP ainsi que les extensions `gd`, `geoip` et `mysql-nd`.
+
+### postgresql
+
+Installe PostgreSQL

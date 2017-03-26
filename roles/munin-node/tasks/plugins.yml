@@ -44,3 +44,29 @@
     - mysql_slowqueries
     - mysql_threads
   when: find_mysql.stdout != '0'
+
+- name: Recherche postgresql
+  shell: 'find /etc -mindepth 1 -maxdepth 1 -name postgresql | wc -l'
+  register: find_postgresql
+  changed_when: false
+
+- name: Activation plugins postgresql (communs)
+  file:
+    path: '/etc/munin/plugins/{{ item }}'
+    src: '/usr/share/munin/plugins/{{ item }}'
+    state: link
+  with_items:
+    - postgres_users
+    - postgres_connections_db
+  when: find_postgresql.stdout != '0'
+
+- name: Activation plugins postgresql (par bdd)
+  file:
+    path: '/etc/munin/plugins/{{ item }}ALL'
+    src: '/usr/share/munin/plugins/{{ item }}'
+    state: link
+  with_items:
+    - postgres_querylength_
+    - postgres_transactions_
+    - postgres_size_
+  when: find_postgresql.stdout != '0'
