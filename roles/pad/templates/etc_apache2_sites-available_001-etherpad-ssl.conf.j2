@@ -2,7 +2,7 @@
   ServerName {{ etherpad_domain }}
   ServerSignature Off
 
-  Redirect / https://{{ etherpad_domain }}/
+  RedirectMatch ^/([^\.].*) https://{{ etherpad_domain }}/$1
 
   <Location />
     Order deny,allow
