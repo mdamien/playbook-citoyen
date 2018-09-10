@@ -14,6 +14,8 @@
   ServerName {{ lafabrique_domain }}
   ServerAdmin {{ contact_email }}
   ServerSignature Off
+  
+  AddDefaultCharset utf-8
 
   CustomLog ${APACHE_LOG_DIR}/lafabrique_access.log combined
   ErrorLog ${APACHE_LOG_DIR}/lafabrique_error.log
